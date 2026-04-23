@@ -27,7 +27,7 @@ MovieLen-100K-AI-model/
 
 ## Yêu cầu hệ thống
 
-* Python 3.10 hoặc 3.11
+* Python 3.10 trở lên
 * Git
 * pip
 * Khuyến nghị dùng môi trường ảo `venv`
