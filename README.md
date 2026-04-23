@@ -81,7 +81,7 @@ Nếu bạn không có các file lớn này đúng vị trí, hãy tải chúng 
 
 ## 5. Chạy project
 
-Vì repo có cả `streamlit`, `fastapi` và `uvicorn`, dự án có thể đang hỗ trợ một trong hai cách chạy sau.
+Vì repo có cả `streamlit`, `fastapi` và `uvicorn`, dự án đang hỗ trợ cách chạy sau.
 
 ### Cách A: Chạy giao diện Streamlit
 
@@ -103,7 +103,7 @@ Sau khi chạy, mở trình duyệt theo địa chỉ được terminal in ra, t
 http://localhost:8501
 ```
 
-### Cách B: Chạy API bằng FastAPI
+### Cách B: Chạy API bằng FastAPI (đang phát triển)
 
 Nếu project có file API như `main.py` chứa đối tượng `app = FastAPI()`:
 
@@ -175,8 +175,7 @@ Sau đó thử lại.
 
 Khuyến nghị dùng:
 
-* Python 3.10
-* hoặc Python 3.11
+* Python 3.10 trở lên
 
 ## 9. Gợi ý cho người dùng mới
 
