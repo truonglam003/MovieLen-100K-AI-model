@@ -1,4 +1,4 @@
-# MovieLen-100K-AI-model
+# MovieLen-100K AI model
 
 Dự án xây dựng hệ thống gợi ý phim sử dụng bộ dữ liệu MovieLens, có thể phục vụ qua giao diện ứng dụng hoặc API.
 
