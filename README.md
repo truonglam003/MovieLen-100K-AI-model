@@ -77,7 +77,7 @@ pip install -r requirements.txt
 * `data/tags.csv`
 * `artifacts/recommender.joblib`
 
-Nếu bạn không đưa các file lớn này trực tiếp vào GitHub, hãy tải chúng về và đặt đúng vị trí như trên trước khi chạy project.
+Nếu bạn không có các file lớn này đúng vị trí, hãy tải chúng về và đặt đúng vị trí như trên trước khi chạy project.
 
 ## 5. Chạy project
 
