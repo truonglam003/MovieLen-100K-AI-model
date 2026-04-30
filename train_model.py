@@ -2,10 +2,10 @@ import os
 
 import joblib
 
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import (
-    RATINGS_PATH,
-    MOVIES_PATH,
-    LINKS_PATH,
     MIN_USER_RATINGS,
     MIN_MOVIE_RATINGS,
     N_COMPONENTS,
@@ -13,8 +13,12 @@ from config import (
     POPULARITY_MIN_RATINGS,
     TOP_N,
 )
-from data_loader import load_data, filter_data, split_train_test
-from models import SVDRecommender, ContentBasedRecommender, popularity_recommend
+
+from backend.database import engine
+
+
+from ai_core.data_loader import load_data, filter_data, split_train_test
+from ai_core.models import SVDRecommender, ContentBasedRecommender, popularity_recommend
 
 
 def train_and_save(
@@ -24,7 +28,7 @@ def train_and_save(
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
     print("Loading data...")
-    ratings, movies = load_data(RATINGS_PATH, MOVIES_PATH, LINKS_PATH)
+    ratings, movies = load_data(engine)
 
     print("Filtering data...")
     ratings = filter_data(
@@ -58,6 +62,7 @@ def train_and_save(
         "model": model,
         "cb_model": cb_model,
         "popular_df": popular_df,
+        "train_df": train_df,
         "movies_df": movies,
         "meta": {
             "explained_variance_sum": float(explained_var),

@@ -54,7 +54,6 @@ class SVDRecommender:
         self.user_mean_rating = None  # np.ndarray, shape (n_users,)
         self.user_factors = None
         self.item_factors = None
-        self.user_seen_movies = None
         self.all_train_movie_ids = None
         self.movies_df = None
 
@@ -164,8 +163,6 @@ class ContentBasedRecommender:
         self.tfidf_matrix = None
         self.movie_id_to_index = None
         self.index_to_movie_id = None
-        self.user_liked_movies = None
-        self.user_seen_movies = None
 
     def fit(self, train_df, movies_df):
         self.movies_df = movies_df.copy()
@@ -246,6 +243,39 @@ class ContentBasedRecommender:
             columns_to_return.append("tmdbId")
             
         return recs[columns_to_return]
+
+    def recommend_similar(self, movie_id, top_n=10):
+        if self.tfidf_matrix is None or movie_id not in self.movie_id_to_index:
+            return None
+            
+        movie_idx = self.movie_id_to_index[movie_id]
+        
+        # Tính similarity của tất cả các phim so với phim đang chọn
+        tfidf_movie = self.tfidf_matrix[movie_idx]
+        sim_scores = cosine_similarity(self.tfidf_matrix, tfidf_movie).flatten()
+        
+        # Loại bỏ chính nó
+        sim_scores[movie_idx] = -np.inf
+        
+        candidate_count = min(top_n * 5, len(sim_scores))
+        top_idx_unsorted = np.argpartition(sim_scores, -candidate_count)[-candidate_count:]
+        top_idx_sorted = top_idx_unsorted[np.argsort(sim_scores[top_idx_unsorted])[::-1]]
+        
+        top_movie_indices = top_idx_sorted[:top_n]
+        top_movie_ids = [self.index_to_movie_id[idx] for idx in top_movie_indices]
+        top_scores = [float(sim_scores[idx]) for idx in top_movie_indices]
+        
+        recs = pd.DataFrame({
+            "movieId": top_movie_ids,
+            "pred_score": top_scores
+        }).merge(self.movies_df, on="movieId", how="left")
+        
+        columns_to_return = ["movieId", "title", "genres", "pred_score"]
+        if "tmdbId" in recs.columns:
+            columns_to_return.append("tmdbId")
+            
+        return recs[columns_to_return]
+
 
 
 class HybridRecommender:

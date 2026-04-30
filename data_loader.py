@@ -1,37 +1,26 @@
 import pandas as pd
 
+def load_data(engine):
+    print("Fetching ratings from MySQL...")
+    ratings_query = "SELECT user_id AS userId, movie_id AS movieId, rating FROM ratings"
+    ratings = pd.read_sql(ratings_query, engine)
+    
+    ratings = ratings.astype({
+        "userId": "int32",
+        "movieId": "int32",
+        "rating": "float32"
+    })
 
-def load_data(ratings_path, movies_path, links_path=None):
-    ratings = pd.read_csv(
-        ratings_path,
-        usecols=["userId", "movieId", "rating"],
-        dtype={
-            "userId": "int32",
-            "movieId": "int32",
-            "rating": "float32"
-        }
-    )
-
-    movies = pd.read_csv(
-        movies_path,
-        usecols=["movieId", "title", "genres"],
-        dtype={
-            "movieId": "int32",
-            "title": "string",
-            "genres": "string"
-        }
-    )
-
-    if links_path is not None:
-        links = pd.read_csv(
-            links_path,
-            usecols=["movieId", "tmdbId"],
-            dtype={
-                "movieId": "int32",
-                "tmdbId": "Int64"  # Int64 supports NaNs
-            }
-        )
-        movies = movies.merge(links, on="movieId", how="left")
+    print("Fetching movies from MySQL...")
+    movies_query = "SELECT id AS movieId, title, genres, tmdb_id AS tmdbId FROM movies"
+    movies = pd.read_sql(movies_query, engine)
+    
+    movies = movies.astype({
+        "movieId": "int32",
+        "title": "string",
+        "genres": "string",
+        "tmdbId": "Int64"
+    })
 
     return ratings, movies
 

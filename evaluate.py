@@ -65,7 +65,14 @@ def evaluate_svd_model(
             continue
 
         positive_items = set(user_test_rows["movieId"].tolist())
-        seen_items = model.user_seen_movies.get(user_id, set())
+        
+        # Lấy danh sách phim đã xem từ ma trận thưa seen_sparse
+        if hasattr(model, 'seen_sparse') and user_id < model.seen_sparse.shape[0]:
+            s_start = model.seen_sparse.indptr[user_id]
+            s_end = model.seen_sparse.indptr[user_id+1]
+            seen_items = set(model.seen_sparse.indices[s_start:s_end].tolist())
+        else:
+            seen_items = set()
 
         candidate_pool = list(model.all_train_movie_ids - seen_items - positive_items)
         if len(candidate_pool) == 0:
